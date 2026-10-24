@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>Meu Financeiro</title>
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--ink:#172033;--muted:#687386;--blue:#2563eb;--green:#16845b;--red:#c24141;--line:#e5e9f0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{background:#101827;color:#fff;padding:22px 18px 20px;border-radius:0 0 24px 24px}header small{color:#b9c3d4}header h1{margin:6px 0 18px;font-size:27px}.total-label{font-size:13px;color:#c4cede}.total{font-size:32px;font-weight:750;margin:5px 0 16px}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.summary div{background:#202b3d;border-radius:13px;padding:11px 9px}.summary span{display:block;color:#bdc7d7;font-size:11px;margin-bottom:6px}.summary b{font-size:14px;overflow-wrap:anywhere}.tabs{display:flex;gap:7px;padding:14px 12px;overflow:auto}.tabs button{border:0;border-radius:999px;background:#e5eaf3;color:#39445a;padding:10px 14px;white-space:nowrap;font-weight:650}.tabs button.active{background:var(--blue);color:#fff}main{padding:0 14px 100px;max-width:760px;margin:auto}.panel{display:none}.panel.active{display:block}.card{background:var(--card);border-radius:17px;padding:16px;margin-bottom:13px;box-shadow:0 2px 10px #18264208}.card h2{font-size:18px;margin:0 0 13px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.muted{color:var(--muted);font-size:13px}.money{font-weight:750}.green{color:var(--green)}.red{color:var(--red)}button,.btn{cursor:pointer}button.primary{background:var(--blue);color:#fff;border:0;border-radius:11px;padding:12px 15px;font-weight:700}button.secondary{background:#eef2f8;color:#253047;border:0;border-radius:10px;padding:10px 12px;font-weight:650}button.danger{background:#fff0f0;color:var(--red);border:0;border-radius:10px;padding:9px 11px}.full{width:100%}form{display:grid;gap:11px}label{font-size:13px;font-weight:650;color:#4a5569;display:grid;gap:6px}input,select,textarea{width:100%;border:1px solid #dce2eb;border-radius:10px;background:#fff;padding:12px;font:inherit;color:var(--ink);min-width:0}input:focus,select:focus{outline:2px solid #b7ccff;border-color:var(--blue)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.item{border-top:1px solid var(--line);padding:13px 0}.item:first-of-type{border-top:0}.item-title{font-weight:700}.empty{padding:18px;text-align:center;color:var(--muted);font-size:14px}.badge{font-size:11px;border-radius:99px;padding:5px 8px;background:#eef2f8;color:#48536a}.badge.paid{background:#e1f7eb;color:#13744d}.small-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.progress{height:7px;background:#e8edf5;border-radius:99px;overflow:hidden;margin:9px 0}.progress span{height:100%;display:block;background:var(--blue)}.note{background:#fff7df;border:1px solid #f2df9f;padding:12px;border-radius:12px;font-size:13px;color:#705b20;line-height:1.45}.footer{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(12px);padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);font-size:12px;color:var(--muted);text-align:center}.toast{position:fixed;left:16px;right:16px;bottom:85px;background:#172033;color:white;border-radius:12px;padding:13px;display:none;z-index:5}.hidden{display:none!important}@media(min-width:650px){main{padding-top:10px}.summary b{font-size:17px}}
+</style>
+</head>
+<body>
+<header>
+  <small>SEU CONTROLE FINANCEIRO</small>
+  <h1>Meu Financeiro</h1>
+  <div class="total-label">Saldo registrado (entradas − despesas)</div>
+  <div class="total" id="balance">R$ 0,00</div>
+  <div class="summary">
+    <div><span>Entradas</span><b class="green" id="incomeTotal">R$ 0,00</b></div>
+    <div><span>Despesas</span><b class="red" id="expenseTotal">R$ 0,00</b></div>
+    <div><span>Em dívidas</span><b id="debtTotal">R$ 0,00</b></div>
+  </div>
+</header>
+<nav class="tabs" aria-label="Seções">
+<button class="active" data-tab="home">Visão geral</button><button data-tab="moves">Entradas e despesas</button><button data-tab="debts">Dívidas pessoais</button><button data-tab="bills">Contas</button><button data-tab="goals">Metas</button><button data-tab="backup">Dados e backup</button>
+</nav>
+<main>
+<section class="panel active" id="home">
+ <div class="card"><h2>Resumo do mês</h2><div class="row"><span class="muted">Movimentações registradas</span><b id="moveCount">0</b></div><div class="row" style="margin-top:12px"><span class="muted">Contas pendentes</span><b id="pendingCount">0</b></div><div class="row" style="margin-top:12px"><span class="muted">Metas em andamento</span><b id="goalCount">0</b></div></div>
+ <div class="card"><h2>Acesso rápido</h2><div class="grid2"><button class="primary" onclick="switchTab('moves')">+ Lançamento</button><button class="secondary" onclick="switchTab('debts')">+ Registrar dívida</button><button class="secondary" onclick="switchTab('bills')">+ Nova conta</button><button class="secondary" onclick="switchTab('goals')">+ Nova meta</button></div></div>
+ <div class="note"><b>Atenção ao salvamento:</b> esta primeira versão salva os dados neste navegador/dispositivo. Ela ainda não sincroniza com uma nuvem nem faz cópia automática online. Use “Dados e backup” para exportar uma cópia e não limpe os dados do navegador.</div>
+ <div class="card" style="margin-top:13px"><h2>Últimas movimentações</h2><div id="recentMoves"></div></div>
+</section>
+<section class="panel" id="moves">
+ <div class="card"><h2>Adicionar entrada ou despesa</h2>
+ <form id="moveForm">
+ <div class="grid2"><label>Tipo<select id="moveType"><option value="income">Entrada</option><option value="expense">Despesa</option></select></label><label>Valor (R$)<input id="moveAmount" type="number" min="0.01" step="0.01" placeholder="0,00" required></label></div>
+ <label>Descrição<input id="moveDesc" maxlength="100" placeholder="Ex.: salário, mercado" required></label>
+ <div class="grid2"><label>Categoria<input id="moveCategory" maxlength="50" placeholder="Ex.: trabalho"></label><label>Data<input id="moveDate" type="date" required></label></div>
+ <button class="primary" type="submit">Salvar movimentação</button>
+ </form></div>
+ <div class="card"><h2>Histórico</h2><div id="moveList"></div></div>
+</section>
+<section class="panel" id="debts">
+ <div class="card"><h2>Registrar dívida com alguém</h2><form id="debtForm">
+ <label>Nome da pessoa ou credor<input id="debtPerson" maxlength="80" placeholder="Ex.: João" required></label>
+ <div class="grid2"><label>Valor inicial (R$)<input id="debtAmount" type="number" min="0.01" step="0.01" placeholder="0,00" required></label><label>Data<input id="debtDate" type="date" required></label></div>
+ <label>Motivo / observação<input id="debtNote" maxlength="120" placeholder="Ex.: empréstimo para conserto"></label>
+ <button class="primary" type="submit">Registrar dívida</button></form></div>
+ <div class="card"><h2>Quem eu devo</h2><div id="debtList"></div></div>
+ <div class="note">Ao registrar um pagamento parcial, o app desconta o valor do saldo devedor e mantém o histórico de pagamentos. Exemplo: dívida de R$ 1.000 − pagamento de R$ 200 = saldo de R$ 800.</div>
+</section>
+<section class="panel" id="bills">
+ <div class="card"><h2>Nova conta a pagar ou receber</h2><form id="billForm">
+ <div class="grid2"><label>Tipo<select id="billType"><option value="pay">A pagar</option><option value="receive">A receber</option></select></label><label>Valor (R$)<input id="billAmount" type="number" min="0.01" step="0.01" required placeholder="0,00"></label></div>
+ <label>Descrição<input id="billDesc" maxlength="100" required placeholder="Ex.: conta de luz"></label>
+ <div class="grid2"><label>Vencimento<input id="billDue" type="date" required></label><label>Categoria<input id="billCategory" maxlength="50" placeholder="Ex.: casa"></label></div>
+ <button class="primary" type="submit">Salvar conta</button></form></div>
+ <div class="card"><h2>Contas registradas</h2><div id="billList"></div></div>
+</section>
+<section class="panel" id="goals">
+ <div class="card"><h2>Criar meta financeira</h2><form id="goalForm">
+ <label>Nome da meta<input id="goalName" maxlength="80" required placeholder="Ex.: reserva de emergência"></label>
+ <div class="grid2"><label>Valor desejado (R$)<input id="goalTarget" type="number" min="0.01" step="0.01" required placeholder="0,00"></label><label>Já economizado (R$)<input id="goalSaved" type="number" min="0" step="0.01" value="0"></label></div>
+ <label>Prazo (opcional)<input id="goalDue" type="date"></label><button class="primary" type="submit">Criar meta</button></form></div>
+ <div class="card"><h2>Minhas metas</h2><div id="goalList"></div></div>
+</section>
+<section class="panel" id="backup">
+ <div class="card"><h2>Dados e backup</h2><p class="muted">Os dados desta versão ficam armazenados localmente no navegador deste aparelho. Exporte uma cópia regularmente e guarde-a em local seguro.</p>
+ <button class="primary full" id="exportBtn">Exportar backup (JSON)</button>
+ <label style="margin-top:14px">Restaurar backup de arquivo JSON<input type="file" id="importFile" accept=".json,application/json"></label>
+ <button class="danger full" style="margin-top:14px" id="clearBtn">Apagar todos os dados deste aparelho</button>
+ </div>
+ <div class="note">Este aplicativo é um protótipo pessoal e não está conectado a uma conta bancária. Não inclua senhas, dados de cartão ou outras informações bancárias sigilosas. O backup exportado pode conter informações financeiras pessoais; mantenha-o privado.</div>
+</section>
+</main>
+<div class="toast" id="toast" role="status"></div><div class="footer">Meu Financeiro • Protótipo pessoal</div>
+<script>
+const KEY='meuFinanceiro_v1';
+const today=()=>new Date().toLocaleDateString('en-CA');
+let state={moves:[],debts:[],bills:[],goals:[]};
+try{const saved=localStorage.getItem(KEY);if(saved){const parsed=JSON.parse(saved);state={...state,...parsed}}}catch(e){}
+const $=id=>document.getElementById(id);
+const brl=n=>Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));render();return true}catch(e){toast('Não foi possível salvar. Exporte um backup e verifique o espaço disponível.');return false}}
+function toast(msg){const el=$('toast');el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',2800)}
+function switchTab(name){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+function render(){
+ const inc=state.moves.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0), exp=state.moves.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);
+ const debt=state.debts.reduce((s,d)=>s+Math.max(0,d.amount-d.payments.reduce((a,p)=>a+p.amount,0)),0);
+ $('balance').textContent=brl(inc-exp);$('incomeTotal').textContent=brl(inc);$('expenseTotal').textContent=brl(exp);$('debtTotal').textContent=brl(debt);
+ $('moveCount').textContent=state.moves.length;$('pendingCount').textContent=state.bills.filter(b=>!b.paid).length;$('goalCount').textContent=state.goals.filter(g=>g.saved<g.target).length;
+ const moveHtml=(x,withDelete=true)=>`<div class="item"><div class="row"><div><div class="item-title">${safe(x.desc)}</div><div class="muted">${safe(x.date||'')} · ${safe(x.category||'Sem categoria')}</div></div><div style="text-align:right"><div class="money ${x.type==='income'?'green':'red'}">${x.type==='income'?'+':'−'} ${brl(x.amount)}</div>${withDelete?`<button class="danger" onclick="removeItem('moves','${x.id}')">Excluir</button>`:''}</div></div></div>`;
+ $('moveList').innerHTML=state.moves.length?state.moves.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(x=>moveHtml(x)).join(''):'<div class="empty">Nenhuma movimentação registrada.</div>';
+ $('recentMoves').innerHTML=state.moves.length?state.moves.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,4).map(x=>moveHtml(x,false)).join(''):'<div class="empty">Adicione sua primeira entrada ou despesa.</div>';
+ $('debtList').innerHTML=state.debts.length?state.debts.map(d=>{const paid=d.payments.reduce((a,p)=>a+p.amount,0),remain=Math.max(0,d.amount-paid);return `<div class="item"><div class="row"><div><div class="item-title">${safe(d.person)}</div><div class="muted">${safe(d.note||'Sem observação')} · iniciada em ${safe(d.date)}</div></div><div style="text-align:right"><div class="money ${remain===0?'green':'red'}">${brl(remain)}</div><span class="badge ${remain===0?'paid':''}">${remain===0?'Quitada':'Saldo devedor'}</span></div></div><div class="muted" style="margin-top:8px">Inicial: ${brl(d.amount)} · Pago: ${brl(paid)}</div><div class="small-actions">${remain>0?`<button class="primary" onclick="payDebt('${d.id}')">Registrar pagamento</button>`:''}<button class="secondary" onclick="showPayments('${d.id}')">Histórico de pagamentos (${d.payments.length})</button><button class="danger" onclick="removeItem('debts','${d.id}')">Excluir</button></div><div id="payments-${d.id}" class="muted hidden" style="margin-top:8px">${d.payments.length?d.payments.map(p=>`${safe(p.date)} — ${brl(p.amount)}${p.note?' · '+safe(p.note):''}`).join('<br>'):'Nenhum pagamento registrado.'}</div></div>`}).join(''):'<div class="empty">Ainda não há dívidas cadastradas.</div>';
+ $('billList').innerHTML=state.bills.length?state.bills.slice().sort((a,b)=>a.due.localeCompare(b.due)).map(b=>`<div class="item"><div class="row"><div><div class="item-title">${safe(b.desc)}</div><div class="muted">${b.type==='pay'?'A pagar':'A receber'} · vence ${safe(b.due)} · ${safe(b.category||'Sem categoria')}</div></div><div style="text-align:right"><div class="money">${brl(b.amount)}</div><span class="badge ${b.paid?'paid':''}">${b.paid?'Concluída':'Pendente'}</span></div></div><div class="small-actions">${!b.paid?`<button class="secondary" onclick="toggleBill('${b.id}')">Marcar concluída</button>`:`<button class="secondary" onclick="toggleBill('${b.id}')">Reabrir</button>`}<button class="danger" onclick="removeItem('bills','${b.id}')">Excluir</button></div></div>`).join(''):'<div class="empty">Nenhuma conta cadastrada.</div>';
+ $('goalList').innerHTML=state.goals.length?state.goals.map(g=>{const pct=Math.min(100,Math.round(g.saved/g.target*100));return `<div class="item"><div class="row"><div class="item-title">${safe(g.name)}</div><span class="badge">${pct}%</span></div><div class="progress"><span style="width:${pct}%"></span></div><div class="row"><span class="muted">${brl(g.saved)} de ${brl(g.target)}</span><span class="muted">${g.due?'Prazo: '+safe(g.due):''}</span></div><div class="small-actions"><button class="primary" onclick="addGoalAmount('${g.id}')">Adicionar valor</button><button class="danger" onclick="removeItem('goals','${g.id}')">Excluir</button></div></div>`}).join(''):'<div class="empty">Crie uma meta para acompanhar seu progresso.</div>';
+}
+function removeItem(collection,id){if(confirm('Deseja realmente excluir este registro?')){state[collection]=state[collection].filter(x=>x.id!==id);save();toast('Registro excluído.')}}
+function payDebt(id){const d=state.debts.find(x=>x.id===id);if(!d)return;const paid=d.payments.reduce((a,p)=>a+p.amount,0),remain=Math.max(0,d.amount-paid);const amount=Number(prompt(`Saldo atual: ${brl(remain)}\nQuanto você pagou? (R$)`,'0'));if(!Number.isFinite(amount)||amount<=0)return;if(amount>remain){alert('O pagamento não pode ser maior que o saldo devedor.');return}const note=prompt('Observação opcional (ex.: Pix)','')||'';d.payments.push({id:uid(),amount,date:today(),note});save();toast('Pagamento registrado e saldo atualizado.')}
+function showPayments(id){const el=$('payments-'+id);if(el)el.classList.toggle('hidden')}
+function toggleBill(id){const b=state.bills.find(x=>x.id===id);if(b){b.paid=!b.paid;save()}}
+function addGoalAmount(id){const g=state.goals.find(x=>x.id===id);if(!g)return;const amount=Number(prompt(`Já economizado: ${brl(g.saved)}\nQuanto deseja adicionar? (R$)`,'0'));if(!Number.isFinite(amount)||amount<=0)return;g.saved+=amount;save();toast('Meta atualizada.')}
+$('moveDate').value=today();$('debtDate').value=today();$('billDue').value=today();
+$('moveForm').addEventListener('submit',e=>{e.preventDefault();state.moves.push({id:uid(),type:$('moveType').value,amount:Number($('moveAmount').value),desc:$('moveDesc').value.trim(),category:$('moveCategory').value.trim(),date:$('moveDate').value});save();e.target.reset();$('moveDate').value=today();toast('Movimentação salva.')});
+$('debtForm').addEventListener('submit',e=>{e.preventDefault();state.debts.push({id:uid(),person:$('debtPerson').value.trim(),amount:Number($('debtAmount').value),date:$('debtDate').value,note:$('debtNote').value.trim(),payments:[]});save();e.target.reset();$('debtDate').value=today();toast('Dívida registrada.')});
+$('billForm').addEventListener('submit',e=>{e.preventDefault();state.bills.push({id:uid(),type:$('billType').value,amount:Number($('billAmount').value),desc:$('billDesc').value.trim(),due:$('billDue').value,category:$('billCategory').value.trim(),paid:false});save();e.target.reset();$('billDue').value=today();toast('Conta salva.')});
+$('goalForm').addEventListener('submit',e=>{e.preventDefault();state.goals.push({id:uid(),name:$('goalName').value.trim(),target:Number($('goalTarget').value),saved:Number($('goalSaved').value||0),due:$('goalDue').value});save();e.target.reset();$('goalSaved').value=0;toast('Meta criada.')});
+$('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({app:'Meu Financeiro',version:1,exportedAt:new Date().toISOString(),data:state},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='backup-meu-financeiro.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Backup exportado. Guarde o arquivo em local seguro.')});
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text()),d=obj.data||obj;if(!d||!Array.isArray(d.moves)||!Array.isArray(d.debts)||!Array.isArray(d.bills)||!Array.isArray(d.goals))throw new Error('Formato inválido');if(confirm('Importar este backup substituirá os dados atuais. Deseja continuar?')){state=d;save();toast('Backup restaurado.')}}catch(err){alert('Não foi possível ler esse backup. Selecione um JSON exportado pelo Meu Financeiro.')}e.target.value=''});
+$('clearBtn').addEventListener('click',()=>{if(confirm('Tem certeza? Isso apagará os registros salvos neste navegador. Exporte um backup antes.')){state={moves:[],debts:[],bills:[],goals:[]};save();toast('Dados locais apagados.')}});
+render();
+</script>
+</body>
+</html>
